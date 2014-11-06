@@ -49,6 +49,12 @@ class DumpSitemapsCommand extends ContainerAwareCommand
                 'Base url to use for absolute urls. Good example - http://acme.com/, bad example - acme.com. Defaults to dumper_base_url config parameter'
             )
             ->addOption(
+                'path-prefix',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Sitemap files url prefix'
+            )
+            ->addOption(
                 'gzip',
                 null,
                 InputOption::VALUE_NONE,
@@ -109,6 +115,7 @@ class DumpSitemapsCommand extends ContainerAwareCommand
         }
         $options = array(
             'gzip' => (Boolean)$input->getOption('gzip'),
+            'path_prefix' => $input->getOption('path-prefix'),
         );
         $filenames = $dumper->dump($targetDir, $baseUrl, $input->getOption('section'), $options);
 

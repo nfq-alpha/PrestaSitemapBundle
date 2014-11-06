@@ -49,6 +49,11 @@ class Dumper extends AbstractGenerator
     protected $sitemapFilePrefix;
 
     /**
+     * @var
+     */
+    private $pathPrefix;
+
+    /**
      * @param EventDispatcherInterface $dispatcher Symfony's EventDispatcher
      * @param Filesystem $filesystem Symfony's Filesystem
      * @param $sitemapFilePrefix
@@ -75,6 +80,8 @@ class Dumper extends AbstractGenerator
      */
     public function dump($targetDir, $host, $section = null, array $options = array())
     {
+        $this->pathPrefix = isset($options['path_prefix']) ? $options['path_prefix'] : false;
+
         $options = array_merge(array('gzip' => false), $options);
 
         $this->baseUrl = $host;
@@ -238,6 +245,17 @@ class Dumper extends AbstractGenerator
      */
     protected function newUrlset($name, \DateTime $lastmod = null)
     {
-        return new DumpingUrlset($this->baseUrl . $this->sitemapFilePrefix . '.' . $name . '.xml', $lastmod);
+        return new DumpingUrlset($this->getFileUrl($name), $lastmod);
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    private function getFileUrl($name)
+    {
+        $path = $this->pathPrefix ? ($this->pathPrefix . '/') : '';
+
+        return $this->baseUrl . $path . $this->sitemapFilePrefix . '.' . $name . '.xml';
     }
 }
