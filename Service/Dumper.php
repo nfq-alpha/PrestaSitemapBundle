@@ -73,12 +73,12 @@ class Dumper extends AbstractGenerator
      *
      * @param string $targetDir Directory where to save sitemap files
      * @param string $host
-     * @param null   $section   Optional section name - only sitemaps of this section will be updated
-     * @param array  $options   Possible options: gzip
-     *
+     * @param string $locale Locale for which sitemap URLs should be generated
+     * @param null $section Optional section name - only sitemaps of this section will be updated
+     * @param array $options Possible options: gzip
      * @return array|bool
      */
-    public function dump($targetDir, $host, $section = null, array $options = array())
+    public function dump($targetDir, $host, $locale = null, $section = null, array $options = array())
     {
         $this->pathPrefix = isset($options['path_prefix']) ? $options['path_prefix'] : false;
 
@@ -89,7 +89,7 @@ class Dumper extends AbstractGenerator
         // and activate command below removes temp folder
         $this->prepareTempFolder();
 
-        $this->populate($section);
+        $this->populate($section, $locale);
 
         // if no urlset wasn't created during populating
         // it means no URLs were added to the sitemap
