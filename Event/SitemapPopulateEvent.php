@@ -31,10 +31,21 @@ class SitemapPopulateEvent extends Event
      */
     protected $section;
 
-    public function __construct(AbstractGenerator $generator, $section = null)
+    /**
+     * @var string Locale for which URLs should be generated
+     */
+    protected $locale = null;
+
+    /**
+     * @param AbstractGenerator $generator
+     * @param string $locale Locale for which URLs should be generated
+     * @param null $section
+     */
+    public function __construct(AbstractGenerator $generator, $section = null, $locale = null)
     {
         $this->generator = $generator;
         $this->section = $section;
+        $this->locale = $locale;
     }
 
     /**
@@ -53,5 +64,10 @@ class SitemapPopulateEvent extends Event
     public function getSection()
     {
         return $this->section;
+    }
+
+    public function getLocale()
+    {
+        return $this->locale;
     }
 }
