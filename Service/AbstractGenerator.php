@@ -104,10 +104,11 @@ abstract class AbstractGenerator
      * Dispatches SitemapPopulate Event - the listeners should use it to add their URLs to the sitemap
      *
      * @param string|null $section
+     * @param string $locale Locale for which URLs should be generated
      */
-    protected function populate($section = null)
+    protected function populate($section = null, $locale = null)
     {
-        $event = new SitemapPopulateEvent($this, $section);
+        $event = new SitemapPopulateEvent($this, $section, $locale);
         $this->dispatcher->dispatch(SitemapPopulateEvent::ON_SITEMAP_POPULATE, $event);
     }
 
