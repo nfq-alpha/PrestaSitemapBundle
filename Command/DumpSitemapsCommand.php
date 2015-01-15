@@ -55,6 +55,12 @@ class DumpSitemapsCommand extends ContainerAwareCommand
                 'Sitemap files url prefix'
             )
             ->addOption(
+                'locale',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Locale for which sitemap should be generated'
+            )
+            ->addOption(
                 'gzip',
                 null,
                 InputOption::VALUE_NONE,
@@ -79,7 +85,11 @@ class DumpSitemapsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $locale = $input->getOption('locale');
         $targetDir = rtrim($input->getArgument('target'), '/');
+        if (!empty($locale)) {
+            $targetDir = $targetDir . '/' . $locale;
+        }
 
         $container = $this->getContainer();
         $dumper = $container->get('presta_sitemap.dumper');
@@ -113,11 +123,16 @@ class DumpSitemapsCommand extends ContainerAwareCommand
                 )
             );
         }
+        $pathPrefix = $input->getOption('path-prefix');
+        if (!empty($locale)) {
+            $pathPrefix = $pathPrefix . '/' . $locale;
+        }
         $options = array(
             'gzip' => (Boolean)$input->getOption('gzip'),
-            'path_prefix' => $input->getOption('path-prefix'),
+            'path_prefix' => $pathPrefix,
         );
-        $filenames = $dumper->dump($targetDir, $baseUrl, $input->getOption('section'), $options);
+
+        $filenames = $dumper->dump($targetDir, $baseUrl, $locale, $input->getOption('section'), $options);
 
         if ($filenames === false) {
             $output->writeln("<error>No URLs were added to sitemap by EventListeners</error> - this may happen when provided section is invalid");
